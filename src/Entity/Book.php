@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BookRepository")
@@ -18,16 +19,22 @@ class Book
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Le titre ne peut être vide")
+     * @Assert\Length(max="150", min="5",
+     *     maxMessage="Le titre ne peut comporter plus de {{ limit }} caractères",
+     *     minMessage="Le titre doit faire au moins {{ limit }} caratères")
      * @ORM\Column(type="string", length=150)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Author")
      */
     private $author;
 
     /**
+     * @Assert\NotBlank(message="La date ne peut être vide")
+     * @Assert\LessThanOrEqual("today", message="La date de publication ne peut être dans l'avenir")
      * @ORM\Column(type="date")
      */
     private $publishedAt;
@@ -69,12 +76,12 @@ class Book
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): ?Author
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(Author $author): self
     {
         $this->author = $author;
 
@@ -139,5 +146,17 @@ class Book
         $this->synopsis = $synopsis;
 
         return $this;
+    }
+
+    /**
+     * @Assert\IsTrue(message="Les livres de SF ne peuvent pas dépasser 30 euros")
+     * @return bool
+     */
+    public function isPriceOfSFBooksLessThanValid(){
+        if($this->genre = "SF" && $this->price > 30){
+            return false;
+        }else{
+            return true;
+        }
     }
 }
