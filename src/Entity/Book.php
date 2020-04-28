@@ -50,7 +50,7 @@ class Book
     private $genre;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Publisher")
      */
     private $publisher;
 
@@ -100,12 +100,12 @@ class Book
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice()
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): self
+    public function setPrice($price): self
     {
         $this->price = $price;
 
@@ -124,12 +124,12 @@ class Book
         return $this;
     }
 
-    public function getPublisher(): ?string
+    public function getPublisher(): ?Publisher
     {
         return $this->publisher;
     }
 
-    public function setPublisher(string $publisher): self
+    public function setPublisher(Publisher $publisher): self
     {
         $this->publisher = $publisher;
 

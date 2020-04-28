@@ -8,6 +8,8 @@
         <tr>
             <th>Titre</th>
             <th>Auteur</th>
+            <th>Prix</th>
+            <th>Editeur</th>
         </tr>
 
         {% for book in bookList %}
@@ -15,6 +17,9 @@
             <tr>
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
+                <td>{{ book.price }}</td>
+                <td>{{ book.publisher }}</td>
+
             </tr>
 
         {% endfor %}

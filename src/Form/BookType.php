@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use App\Entity\Publisher;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -25,12 +26,17 @@ class BookType extends AbstractType
                 'class' => Author::class,
                 'placeholder'=> 'Choisissez un auteur',
                 'multiple'  => false,
-                'expanded'  => true
+                'expanded'  => false
                 ])
             ->add('publishedAt', DateType::class, ['label' => 'Date de publication', 'widget'=>'single_text'])
             ->add('price', NumberType::class, ['label' => 'Prix'])
             ->add('genre', TextType::class, ['label' => 'Genre du livre'])
-            ->add('publisher', TextType::class, ['label'=> 'Editeur du livre'])
+            ->add('publisher', EntityType::class, [
+                'label'=> 'Editeur du livre',
+                'class'=> Publisher::class,
+                'choice_label'=> 'name',
+                'placeholder' => 'Choisissez un éditeur'
+                ])
             ->add('synopsis', TextareaType::class ,[
                 'label' => 'Résumé du livre',
                 'attr' => ['rows' => '8']
