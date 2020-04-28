@@ -19,6 +19,12 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+    public function findAllPaginated(){
+        return $this->createQueryBuilder('b')->select('b')
+            ->orderBy('b.id', 'DESC')
+            ->getQuery();
+    }
+
     // /**
     //  * @return Book[] Returns an array of Book objects
     //  */
