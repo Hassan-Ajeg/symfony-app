@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,6 +32,16 @@ class Publisher
      * @ORM\Column(type="date")
      */
     private $createdAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Book", mappedBy="publisher")
+     */
+    private $bookList;
+
+    public function __construct()
+    {
+        $this->bookList = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,6 +75,37 @@ class Publisher
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|Book[]
+     */
+    public function getBookList(): Collection
+    {
+        return $this->bookList;
+    }
+
+    public function addBookList(Book $bookList): self
+    {
+        if (!$this->bookList->contains($bookList)) {
+            $this->bookList[] = $bookList;
+            $bookList->setPublisher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookList(Book $bookList): self
+    {
+        if ($this->bookList->contains($bookList)) {
+            $this->bookList->removeElement($bookList);
+            // set the owning side to null (unless already changed)
+            if ($bookList->getPublisher() === $this) {
+                $bookList->setPublisher(null);
+            }
+        }
+
+        return $this;
     }
 
 }

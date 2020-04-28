@@ -16,12 +16,15 @@
 
             <tr>
                 <td>{{ book.title }}</td>
+                <td>{{ book.price }}</td>
                 <td>
                     <a href="{{  path('author-details', {'id': book.author.id}) }}">
                     {{ book.author }} </a>
                 </td>
-                <td>{{ book.price }}</td>
-                <td>{{ book.publisher }}</td>
+                <td>
+                    <a href="{{  path('publisher-details', {'id': book.publisher.id}) }}">
+                        {{ book.publisher }}</a>
+                </td>
 
             </tr>
 

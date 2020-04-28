@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Maison d'édition : {{ publisher.name | upper }}</h1>
+
+    <p>Crée le : {{ publisher.createdAt | date('d/m/Y') }}</p>
+
+    <h3>Liste des livres ({{ publisher.bookList | length }})</h3>
+
+    <table class="table table-dark">
+        <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Date de publication</th>
+        </tr>
+        {% for book in publisher.bookList %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.publishedAt | date('d/m/Y')}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

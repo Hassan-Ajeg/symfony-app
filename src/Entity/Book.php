@@ -50,7 +50,7 @@ class Book
     private $genre;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Publisher")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Publisher", inversedBy="bookList")
      */
     private $publisher;
 
