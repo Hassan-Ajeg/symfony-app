@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,15 +15,56 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private EntityManagerInterface $manager;
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
+        $this->manager = $manager;
         parent::__construct($registry, Book::class);
     }
 
     public function findAllPaginated(){
-        return $this->createQueryBuilder('b')->select('b')
+        return $this->createQueryBuilder('b')
+            ->select('b')
             ->orderBy('b.id', 'DESC')
             ->getQuery();
+    }
+
+    public function findAllBooks($genre){
+        $qb = $this->createQueryBuilder('b')
+                ->select('b')
+                ->where("b.genre=:genre")
+                ->orderBy('b.title', 'DESC')
+                ->setParameter('genre', $genre)
+                ->setMaxResults(5);
+        return $qb->getQuery();
+    }
+
+
+    public function findOldestBooksByGenre($genre, $numberOfBook){
+        $qb = $this->createQueryBuilder('b')
+                ->select('b, a')
+                ->where("b.genre=:genre")
+                ->andWhere("a.name='Hugo'")
+                ->innerJoin('b.author', 'a')
+                ->orderBy("b.publishedAt", 'ASC')
+                ->setParameter('genre', $genre)
+                ->setMaxResults($numberOfBook);
+        return $qb->getQuery();
+    }
+
+    public function getBookPriceByGenre(){
+        $qb = $this->createQueryBuilder('b')
+                ->select('b.genre, SUM(b.price) as total')
+                ->groupBy('b.genre');
+
+        return $qb->getQuery();
+    }
+
+    public function getBooksNumberByYear(){
+        $sql = "SELECT YEAR(b.published_at) as YearPublished, count(b.id) as nbBooks
+        FROM books as b GROUP BY year(b.published_at)";
+        $recordSet = $this->manager->getConnection()->query($sql);
+        return $recordSet->fetchAll();
     }
 
     // /**

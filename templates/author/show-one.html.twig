@@ -2,10 +2,26 @@
 
 {% block body %}
     <h1>{{ author }}</h1>
+
     <p>Né le : {{ author.dateOfBirth | date('d/m/Y') }}</p>
 
-    <h2>Ses livres ({{ author.books | length }})</h2>
 
+    <h2>Ses éditeurs</h2>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Editeur</th>
+                <th>Nombre de livres publiés</th>
+            </tr>
+            {% for publisher in authorPublishers %}
+                <tr>
+                    <td>{{ publisher.name }}</td>
+                    <td>{{ publisher.nbBooks }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    <h2>Ses livres ({{ author.books | length }})</h2>
     <table class="table table-striped">
         <tr>
             <th>Titre</th>

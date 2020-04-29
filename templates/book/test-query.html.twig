@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    <h1>Test de requêtes avec le QueryBuillder</h1>
+
+    <ul>
+        {% for book in allBooks %}
+            <li>{{ book.title }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+

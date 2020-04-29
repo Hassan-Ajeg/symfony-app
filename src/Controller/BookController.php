@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Form\BookType;
 use App\Repository\BookRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,11 +41,16 @@ class BookController extends AbstractController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/new", name="book-new")
+     * @Route("/update/{id}", name="book-update", requirements={"id":"\d+"})
      */
 
-    public function showForm(Request $request){
-        //création d'une instance de book
-        $book = new Book();
+    public function showForm(Request $request, Book $book = null){
+        //initialisation de $book a null pour éviter une erreur si ajout de nouveau livre
+        //création d'une instance de book si $book est null
+        if($book == null){
+            $book = new Book();
+        }
+
 
         //création de form
         $form = $this->createForm(BookType::class, $book);
@@ -65,7 +71,39 @@ class BookController extends AbstractController
 
         return $this->render("book/form.html.twig", [
             //envoi du formulaire au modèle Twig
-            'bookForm'  => $form->createView()
+            'bookForm' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/test",name="book-test")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function testQuery(BookRepository $repository)
+    {
+        $allBooks = $repository->findOldestBooksByGenre('poésie', 5);
+        $booksByPrice = $repository->getBookPriceByGenre();
+        $bookByYear = $repository->getBooksNumberByYear();
+
+        return $this->render("book/test-query.html.twig", [
+            'allBooks' => $allBooks->getResult(),
+            'booksByPrice' => $booksByPrice->getResult(),
+            'booksByYear' => $bookByYear
+        ]);
+    }
+
+    /**
+     * @Route("/delete/{id}", name="book-delete", requirements={"id":"\d+"})
+     * @param Book $book
+     */
+    public function delete(Book $book, EntityManagerInterface $manager)
+    {
+        //Suppression d'un livre
+        $manager->remove($book);
+        $manager->flush();
+        $this->addFlash("info", "Votre livre est supprimé");
+        return $this->redirectToRoute('book-list');
+    }
+
+
 }
