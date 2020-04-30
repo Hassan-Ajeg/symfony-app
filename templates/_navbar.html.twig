@@ -31,6 +31,10 @@
                 <li>
                     <a class="nav-link" href="{{ path('admin_logout') }}">Déconnexion</a>
                 </li>
+                {% elseif is_granted('ROLE_CREATOR') %}
+                    <li>
+                        <a class="nav-link" href="{{ path('user_logout') }}">Déconnexion</a>
+                    </li>
             {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">

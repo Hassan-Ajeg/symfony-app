@@ -10,6 +10,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * Class BookController
@@ -39,6 +40,7 @@ class BookController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_CREATOR")
      * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/new", name="book-new")
      * @Route("/update/{id}", name="book-update", requirements={"id":"\d+"})
@@ -93,6 +95,7 @@ class BookController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_CREATOR")
      * @Route("/delete/{id}", name="book-delete", requirements={"id":"\d+"})
      * @param Book $book
      */

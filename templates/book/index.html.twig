@@ -5,16 +5,21 @@
 {% block body %}
     <h1>Liste des livres</h1>
 
-    <div class="mt-2 mb-2 text-right">
-        <a href="{{ path('book-new') }}" class="btn btn-primary">Nouveau livre</a>
-    </div>
+    {% if is_granted('ROLE_CREATOR') %}
+        <div class="mt-2 mb-2 text-right">
+            <a href="{{ path('book-new') }}" class="btn btn-primary">Nouveau livre</a>
+        </div>
+    {% endif %}
+
     <table class="table table-bordered table-striped">
         <tr>
             <th>{{ knp_pagination_sortable(bookList, 'Titre', 'b.title') }}</th>
             <th>Auteur</th>
             <th>Prix</th>
             <th>Editeur</th>
+            {% if is_granted('ROLE_CREATOR') %}
             <th>Action</th>
+            {% endif %}
         </tr>
 
         {% for book in bookList %}
@@ -30,10 +35,13 @@
                     <a href="{{  path('publisher-details', {'id': book.publisher.id}) }}">
                         {{ book.publisher }}</a>
                 </td>
-                <td>
-                    <a href="{{ path('book-delete', {'id': book.id} ) }}" class="btn btn-danger mt-2">Supprimer</a>
-                    <a href="{{ path('book-update', {'id': book.id} ) }}" class="btn btn-success mt-2">Modifier</a>
-                </td>
+                {% if is_granted('ROLE_CREATOR') %}
+                    <td>
+                        <a href="{{ path('book-delete', {'id': book.id} ) }}" class="btn btn-danger mt-2">Supprimer</a>
+                        <a href="{{ path('book-update', {'id': book.id} ) }}" class="btn btn-success mt-2">Modifier</a>
+                    </td>
+
+                {% endif %}
 
             </tr>
 
