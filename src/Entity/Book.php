@@ -100,12 +100,12 @@ class Book
         return $this;
     }
 
-    public function getPrice()
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice($price): self
+    public function setPrice(float $price): self
     {
         $this->price = $price;
 
@@ -153,7 +153,7 @@ class Book
      * @return bool
      */
     public function isPriceOfSFBooksLessThanValid(){
-        if($this->genre = "SF" && $this->price > 30){
+        if($this->genre = "SF" && $this->price < 30){
             return false;
         }else{
             return true;
